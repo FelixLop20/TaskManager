@@ -7,16 +7,17 @@
 body {
     background-color: var(--background);
     color: rgb(255, 255, 255);
-    font-family: 'Open Sans', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .app {
-    margin-top: 2%;
+    margin-top: 7%;
 }
 
-.main_title {
+.main-title {
     font-weight: bold;
     text-align: center;
+    margin-bottom: 20px;
 }
 
 .container {
@@ -24,11 +25,11 @@ body {
 
 }
 
-.add_button {
+.add-button {
     margin-bottom: 15px;
 }
 
-.button_content {
+.button-content {
     width: 100%;
     display: flex;
     justify-content: flex-end;
@@ -38,26 +39,23 @@ body {
     background-color: var(--background);
 }
 
-.acciones {
+.actions {
     color: beige;
     text-decoration: none;
-    background-color: #0b3ea9;
-    padding: 3%;
     border-radius: 5%;
-    margin: 5px 5px;
-
+    margin: 3px;
 }
 
-.modal_footer{
+.modal-footer{
     display: flex;
     justify-content: flex-end;
 }
 
-.m_btn{
+.modal-btn{
     margin: 5px;
 }
 
-.Modal_t {
+.modal-task {
     position: fixed;
     top: 0;
     left: 0;
@@ -98,3 +96,79 @@ body {
     }
   }
   
+
+  .table-content {
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.466);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgb(0, 0, 0);
+  }
+  
+  .task-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgb(3, 16, 29);
+  }
+  
+  .task-table thead {
+    background-color: #ff8800;
+  }
+  
+  .task-table th,
+  .task-table td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .task-table th {
+    font-weight: bold;
+  }
+  
+  .task-table td {
+  
+  }
+  
+  .task-table tr:last-child td {
+    
+  }
+
+
+  .actions-icon{
+    width: 30px;
+  }
+
+  .states-icon{
+    width: 40px;
+  }
+
+  .desc-states-icon{
+    width: 20px;
+  }
+
+.states-desc{
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+
+.options-content{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  margin-bottom: 10px;
+}
+
+.states{
+  margin-left: 10px;
+}
+
+.icon-title{
+  width: 60px;
+}
+
+.btn:focus{
+  box-shadow: none;
+}

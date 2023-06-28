@@ -137,7 +137,7 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
             {
                 closeModal && <>
                     {
-                        <div className="Modal_t">
+                        <div className="modal-task">
                             <div className="modal-container">
                                 <form className="row g-3" onSubmit={ev => {
                                     ev.preventDefault();
@@ -225,15 +225,15 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                         onChange={handleChange}
                                         value={taskAttributes.notas}
                                     />
-                                    <div className="modal_footer">
+                                    <div className="modal-footer">
                                         <Button
                                             type={'button'}
-                                            className={'btn btn-secondary m_btn'}
+                                            className={'btn btn-secondary modal-btn'}
                                             content={'X'}
                                             onClick={() => { setCloseModal(false); setIsEditing(false) }} />
 
                                         <Button
-                                            className={'btn btn-primary m_btn'}
+                                            className={'btn btn-primary modal-btn'}
                                             content={'Guardar'} />
                                     </div>
                                 </form>
