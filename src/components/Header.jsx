@@ -1,10 +1,10 @@
 import React from "react";
 
-export const Header = ({ className, content }) => {
+export const Header = ({ content, ...props }) => {
     return (
         <div className="app">
             <h1
-                className={className}>
+                {...props}>
                 {content}
             </h1>
         </div>

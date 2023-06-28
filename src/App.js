@@ -1,15 +1,16 @@
+import React from 'react';
 import './css/global.css'
-import { Header } from './components/Header';
-import { Table } from './components/table/Table';
+import { Home } from './pages/Home';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { TaskModal } from './components/TaskModal';
 
 export function App() {
   return (
-    <div>
-      <Header
-        className={'main_title'}
-        content={'Administrador de Tareas'}
-      />
-      <Table />
-    </div>
+    <Router>
+      <Routes>
+        <Route exact='true' path='/' element={<Home />} />
+        <Route exact='true' path='/editartarea/:tarea_id' element={<Home />} />
+      </Routes>
+    </Router>
   );
 }

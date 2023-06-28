@@ -1,24 +1,100 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
+:root {
+    --background: rgb(23, 32, 42)
+}
+
 body {
-    background-color: rgb(23, 32, 42);
+    background-color: var(--background);
     color: rgb(255, 255, 255);
     font-family: 'Open Sans', sans-serif;
 }
 
-.app{
+.app {
     margin-top: 2%;
 }
 
 .main_title {
-   font-weight: bold;
-   text-align: center;
+    font-weight: bold;
+    text-align: center;
 }
 
-.container{
+.container {
     margin-top: 2%;
+
+}
+
+.add_button {
+    margin-bottom: 15px;
+}
+
+.button_content {
     width: 100%;
-    border: 1px solid red;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-content {
+    background-color: var(--background);
+}
+
+.acciones {
+    color: beige;
+    text-decoration: none;
+    background-color: #0b3ea9;
+    padding: 3%;
+    border-radius: 5%;
+    margin: 5px 5px;
+
+}
+
+.modal_footer{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.m_btn{
+    margin: 5px;
+}
+
+.Modal_t {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
-}
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: modalFadeIn 0.3s ease-in-out;
+  }
+  
+  .modal-container {
+    background-color: var(--background);
+    width: 500px;
+    height: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-in-out;
+  }
+  
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes modalSlideIn {
+    from {
+      transform: translateY(-100px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  
