@@ -58,7 +58,12 @@ export const FilterModal = ({ closeModalFilter, setCloseModalFilter, isFiltering
 
     const TaskFilter = () => {
         setBodyFilter(body);
-        setIsFiltering(true);
+        setIsFiltering(
+            taskAttributes.estado !== '' ||
+            taskAttributes.colaborador !== '' ||
+            taskAttributes.prioridad !== '' ||
+            showDates
+        )
         setCloseModalFilter(false)
     }
 
