@@ -35,7 +35,6 @@ export const Home = () => {
         AdminTasksAPI.get('/tarea/tareas')
             .then(resp => {
                 setTasks(resp.data.data);
-                console.log(resp.data.data);
             });
 
     };
@@ -43,12 +42,11 @@ export const Home = () => {
         try {
             console.log(bodyFilter);
             AdminTasksAPI.post('/tarea/filtrartareas', bodyFilter)
-                .then(res => {
-                    console.log("Perroo", res.data.data);
+                .then(res => {              
                     setTasks(res.data.data);
                 })
                 .catch(error => {
-                    console.error('Error al crear la tarea:', error);
+                   console.log(error);
                 });
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
@@ -66,11 +64,9 @@ export const Home = () => {
         if (!isFiltering) {
             obtenertasks();
         }
-        console.log('Chaleee');
     }, [closeModal, isFiltering]);
 
     useEffect(() => {
-        console.log('Filtrando');
         if (isFiltering) {
             TaskFilter();
         }

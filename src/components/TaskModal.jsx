@@ -91,59 +91,33 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
         try {
             AdminTasksAPI.post('/tarea/creartarea', body)
                 .then(res => {
-                    console.log(res.data.message);
+                    alert(res.data.message);
                     setCloseModal(false);
                 })
                 .catch(error => {
-                    console.error('Error al crear la tarea:', error);
+                    console.clear();
+                    alert(error.response.data.message)
                 });
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
         }
     };
-
+    
     const editTask = () => {
-  try {
-    AdminTasksAPI.put(`/tarea/editartarea/${taskAttributes.id}`, body)
-      .then(res => {
-        console.log(res.data.message);
-        setCloseModal(false);
-      })
-      .catch(error => {
-        if (error.response) {
-          // Respuesta HTTP recibida, manejar el error de la API
-          const { data } = error.response;
-          alert(data.error);
-        } else if (error.message) {
-          // Error de red u otra excepción, mostrar mensaje genérico
-          alert('Error al enviar la solicitud: ' + error.message);
-        } else {
-          // Error desconocido, mostrar mensaje genérico
-          alert('Error al enviar la solicitud');
-        }
-      });
-  } catch (error) {
-    console.error('Error al enviar la solicitud:', error);
-  }
-};
-
-
-   /* const editTask = () => {
+        
         try {
-            
             AdminTasksAPI.put(`/tarea/editartarea/${taskAttributes.id}`, body)
                 .then(res => {
-                    console.log(res.data.message);
                     setCloseModal(false);
+                    console.log(res);
+                }).catch(error=>{
+                   console.log(error);
                 })
-                .catch(error => {
-                    alert(error);
-                });
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
         }
-    };*/
-
+    };
+    
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
