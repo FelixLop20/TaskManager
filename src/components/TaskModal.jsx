@@ -75,14 +75,13 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
 
     const handleChange = e => {
         const { name, value } = e.target;
-        if (name === 'fecha_inicio') {
+        if (name === 'fecha_inicio' && !isEditing) {
             setTaskAttributes(prevState => ({
                 ...prevState,
                 fecha_inicio: value,
                 fecha_fin: value
             }));
         } else {
-
             setTaskAttributes(prevState => ({
                 ...prevState,
                 [name]: value
@@ -201,7 +200,7 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                         required={true}
                                         lblContent={'Fecha de Inicio:'}
                                         onChange={e => handleChange(e)}
-                                        min={dateNow}
+                                        min={!isEditing && dateNow}
                                         value={taskAttributes.fecha_inicio}
                                         className={'form-control date-input-icon'}
                                     />
