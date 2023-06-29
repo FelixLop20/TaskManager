@@ -17,16 +17,19 @@ import TaskIcon from '../resources/task.png'
 import AddIcon from '../resources/Add.png'
 import FilterIcon from '../resources/filter.png'
 import { FilterModal } from "../components/FilterModal";
+import { ViewTaskModal } from "../components/ViewTaskModal";
 
 export const Home = () => {
 
     const [tasks, setTasks] = useState([]);
     const [closeModal, setCloseModal] = useState(false);
     const [closeModalFilter, setCloseModalFilter] = useState(false);
+    const [closeViewTaskModal, setCloseViewTaskModal] = useState(false);
     const [editTask, setEditTask] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isFiltering, setIsFiltering] = useState(false);
     const [bodyFilter, setBodyFilter] = useState([]);
+    const [selectedTask, setSelectedTask] = useState([]);
 
     const obtenertasks = () => {
         AdminTasksAPI.get('/tarea/tareas')
@@ -142,8 +145,8 @@ export const Home = () => {
                         </thead>
                         <tbody>
                             {tasks.map((item, index) => (
-                                <tr key={index}>
-                                    <Tditem props={item.descripcion} />
+                                <tr onClick={() => { setSelectedTask(item) }} className="table-row" key={index}>
+                                    <Tditem onClick={() => setCloseViewTaskModal(true)} props={item.descripcion} />
                                     <Tditem props={item.prioridad.descripcion} />
                                     <Tditem props={statesContent[item.estado.id]('states-icon')} />
                                     <Tditem props={item.fecha_inicio} />
@@ -190,6 +193,12 @@ export const Home = () => {
                     closeModalFilter={closeModalFilter}
                     setIsFiltering={setIsFiltering}
                     setBodyFilter={setBodyFilter}
+                />
+
+                <ViewTaskModal
+                    setCloseViewTaskModal={setCloseViewTaskModal}
+                    closeViewTaskModal={closeViewTaskModal}
+                    selectedTask={selectedTask}
                 />
 
             </div>

@@ -15,8 +15,8 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
     const [priority, setPriority] = useState([]);
     const date = new Date();
     const dateNow = date.toISOString().split('T')[0];
-
     const [taskAttributes, setTaskAttributes] = useState([]);
+
 
     useEffect(() => {
         AdminTasksAPI.get('/colaborador/colaboradores')
@@ -47,7 +47,6 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                 notas: task.notas || ''
             }
             setTaskAttributes(data)
-
         } else if (!isEditing) {
             setTaskAttributes({
                 descripcion: '',
@@ -63,7 +62,6 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
     }, [task, isEditing]);
 
     const body = {
-
         descripcion: taskAttributes.descripcion,
         estado_id: taskAttributes.estado,
         prioridad_id: taskAttributes.prioridad,
@@ -105,20 +103,46 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
     };
 
     const editTask = () => {
+  try {
+    AdminTasksAPI.put(`/tarea/editartarea/${taskAttributes.id}`, body)
+      .then(res => {
+        console.log(res.data.message);
+        setCloseModal(false);
+      })
+      .catch(error => {
+        if (error.response) {
+          // Respuesta HTTP recibida, manejar el error de la API
+          const { data } = error.response;
+          alert(data.error);
+        } else if (error.message) {
+          // Error de red u otra excepción, mostrar mensaje genérico
+          alert('Error al enviar la solicitud: ' + error.message);
+        } else {
+          // Error desconocido, mostrar mensaje genérico
+          alert('Error al enviar la solicitud');
+        }
+      });
+  } catch (error) {
+    console.error('Error al enviar la solicitud:', error);
+  }
+};
+
+
+   /* const editTask = () => {
         try {
+            
             AdminTasksAPI.put(`/tarea/editartarea/${taskAttributes.id}`, body)
                 .then(res => {
                     console.log(res.data.message);
                     setCloseModal(false);
                 })
                 .catch(error => {
-                    console.error('Error al editar la tarea:', error);
+                    alert(error);
                 });
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
         }
-    };
-
+    };*/
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -178,7 +202,7 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                     />
                                     <Combobox
                                         lblContent={'Estado:'}
-                                        options={states}
+                                        options={!isEditing ? states.slice(0, 1) : states}
                                         id={'estado'}
                                         name={'estado'}
                                         onChange={e => handleChange(e)}
@@ -200,7 +224,7 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                         required={true}
                                         lblContent={'Fecha de Inicio:'}
                                         onChange={e => handleChange(e)}
-                                        min={!isEditing && dateNow}
+                                        min={!isEditing ? dateNow : ''}
                                         value={taskAttributes.fecha_inicio}
                                         className={'form-control date-input-icon'}
                                     />

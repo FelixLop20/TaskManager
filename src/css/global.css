@@ -103,7 +103,7 @@ body {
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.466);
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgb(0, 0, 0);
+  border: 1px solid rgba(0, 0, 0, 0.568);
 }
 
 .task-table {
@@ -138,6 +138,10 @@ body {
 
 .actions-icon {
   width: 30px;
+}
+
+.actions-icon:hover{
+  transform: scale(1.2);
 }
 
 .states-icon {
@@ -232,3 +236,10 @@ body {
   margin-right: 8px; 
   margin-left: 8px;
 }
+
+.table-row:hover{
+  cursor: pointer;
+  background-color: rgb(5, 28, 51);
+}
+
+
