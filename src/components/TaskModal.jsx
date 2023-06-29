@@ -4,6 +4,8 @@ import { Textarea } from "./form/Textarea";
 import { Combobox } from "./form/Combobox";
 import { AdminTasksAPI } from "../api/AdminTasksAPI";
 import { Button } from "./form/Button";
+import EditIcon from '../resources/edit-icon.png'
+import AddIcon from '../resources/Add.png'
 
 
 export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEditing }) => {
@@ -144,7 +146,14 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                     isEditing ? editTask() : createTask();
                                 }}>
                                     {
-                                        <h3>{isEditing ? 'Editar Tarea' : 'Crear Tarea'}</h3>
+                                        <h3>{
+                                            isEditing
+                                                ? <>Editar Tarea <img
+                                                    className="actions-icon"
+                                                    src={EditIcon} alt="" /></>
+                                                : <>Crear Tarea <img
+                                                    className="actions-icon"
+                                                    src={AddIcon} alt="" /></>}</h3>
                                     }
                                     {
                                         isEditing && <Input
@@ -194,6 +203,7 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                         onChange={e => handleChange(e)}
                                         min={dateNow}
                                         value={taskAttributes.fecha_inicio}
+                                        className={'form-control date-input-icon'}
                                     />
                                     <Input
                                         divClassName={'col-md-6'}
@@ -205,6 +215,7 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                         onChange={handleChange}
                                         min={taskAttributes.fecha_inicio}
                                         value={taskAttributes.fecha_fin}
+                                        className={'form-control date-input-icon'}
                                     />
                                     <Combobox
                                         options={colaborators}
@@ -228,12 +239,12 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                     <div className="modal-footer">
                                         <Button
                                             type={'button'}
-                                            className={'btn btn-secondary modal-btn'}
-                                            content={'X'}
+                                            className={'btn btn-warning modal-btn'}
+                                            content={'Cerrar'}
                                             onClick={() => { setCloseModal(false); setIsEditing(false) }} />
 
                                         <Button
-                                            className={'btn btn-primary modal-btn'}
+                                            className={'btn btn-success modal-btn'}
                                             content={'Guardar'} />
                                     </div>
                                 </form>

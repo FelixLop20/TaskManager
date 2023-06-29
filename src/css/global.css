@@ -1,174 +1,234 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
 :root {
-    --background: rgb(23, 32, 42)
+  --background: rgb(23, 32, 42)
 }
 
 body {
-    background-color: var(--background);
-    color: rgb(255, 255, 255);
-    font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: rgb(255, 255, 255);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .app {
-    margin-top: 7%;
+  margin-top: 7%;
 }
 
 .main-title {
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .container {
-    margin-top: 2%;
+  margin-top: 2%;
 
 }
 
 .add-button {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .button-content {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .modal-content {
-    background-color: var(--background);
+  background-color: var(--background);
 }
 
 .actions {
-    color: beige;
-    text-decoration: none;
-    border-radius: 5%;
-    margin: 3px;
+  color: beige;
+  text-decoration: none;
+  border-radius: 5%;
+  margin: 3px;
 }
 
-.modal-footer{
-    display: flex;
-    justify-content: flex-end;
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.modal-btn{
-    margin: 5px;
+.modal-btn {
+  margin: 5px;
 }
 
 .modal-task {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    animation: modalFadeIn 0.3s ease-in-out;
-  }
-  
-  .modal-container {
-    background-color: var(--background);
-    width: 500px;
-    height: auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    animation: modalSlideIn 0.3s ease-in-out;
-  }
-  
-  @keyframes modalFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  @keyframes modalSlideIn {
-    from {
-      transform: translateY(-100px);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: modalFadeIn 0.3s ease-in-out;
+}
 
-  .table-content {
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.466);
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid rgb(0, 0, 0);
-  }
-  
-  .task-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: rgb(3, 16, 29);
-  }
-  
-  .task-table thead {
-    background-color: #ff8800;
-  }
-  
-  .task-table th,
-  .task-table td {
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .task-table th {
-    font-weight: bold;
-  }
-  
-  .task-table td {
-  
-  }
-  
-  .task-table tr:last-child td {
-    
+.modal-container {
+  background-color: var(--background);
+  width: 500px;
+  height: auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-in-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
   }
 
+  to {
+    opacity: 1;
+  }
+}
 
-  .actions-icon{
-    width: 30px;
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-100px);
   }
 
-  .states-icon{
-    width: 40px;
+  to {
+    transform: translateY(0);
   }
+}
 
-  .desc-states-icon{
-    width: 20px;
-  }
 
-.states-desc{
+.table-content {
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.466);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: rgb(3, 16, 29);
+}
+
+.task-table thead {
+  background-color: #ff8800;
+}
+
+.task-table th,
+.task-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.task-table th {
+  font-weight: bold;
+  text-align: center;
+}
+
+.task-table td {
+  text-align: center;
+}
+
+.task-table tr:last-child td {}
+
+
+.actions-icon {
+  width: 30px;
+}
+
+.states-icon {
+  width: 35px;
+}
+
+.desc-states-icon {
+  width: 20px;
+}
+
+.states-desc {
   margin-top: 15px;
   display: flex;
   align-items: center;
   width: 50%;
 }
 
-.options-content{
+.options-content {
   display: flex;
   justify-content: space-between;
   flex-direction: row-reverse;
   margin-bottom: 10px;
 }
 
-.states{
+.states {
   margin-left: 10px;
 }
 
-.icon-title{
+.icon-title {
   width: 60px;
 }
 
-.btn:focus{
+.btn:focus {
   box-shadow: none;
+}
+
+.form-control,
+.form-select {
+  background-color: rgb(1, 7, 14);
+  border: 1px solid rgb(39, 39, 39);
+  color: rgb(255, 246, 228);
+}
+
+.form-control::placeholder,
+.form-select::placeholder {
+  color: #555453;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: rgb(1, 7, 14);
+  color: rgb(255, 246, 228);
+}
+
+.form-control[type='date'] {
+  background-color: rgb(254, 248, 241);
+  color:rgb(0, 9, 27);
+  border: 1px solid rgb(221, 221, 221);
+}
+
+.form-control[type='date']:focus {
+  background-color: rgb(255, 255, 255);
+}
+
+.form-label {
+  color: rgb(255, 246, 228);
+}
+
+.date-input-icon {
+  filter: invert(1);
+}
+
+.btn-warning{
+  background-color: #ff8800;
+  font-weight: bold;
+  color: #ffffff;
+  border: #ff8800;
+}
+
+.btn-warning:hover{
+  background-color: #c06803;
+  border: #ff8800;
+  color: #ffffff;
+}
+
+.checkBox-container {
+  display: flex;
+  align-items: center;
+}
+
+.checkBox-container input[type="checkbox"] {
+  margin-right: 8px; 
+  margin-left: 8px;
 }

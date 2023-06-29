@@ -1,73 +1,129 @@
-import React, { useState, useEffect } from "react";
-import { Input } from "./form/Input";
-import { Combobox } from "./form/Combobox";
-import { AdminTasksAPI } from "../api/AdminTasksAPI";
+import React from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./form/Button";
+import { AdminTasksAPI } from "../api/AdminTasksAPI";
+import { Combobox } from "./form/Combobox";
+import { Input } from "./form/Input";
+import FilterIcon from '../resources/filter.png'
 
-export const FilterModal = ({ closeFiltro, setCloseFiltro, tarea, ...props }) => {
+export const FilterModal = ({ closeModalFilter, setCloseModalFilter, isFiltering, setIsFiltering, setBodyFilter }) => {
+
+    const [colaborators, setColaborators] = useState([]);
+    const [states, setStates] = useState([]);
+    const [priority, setPriority] = useState([]);
+    const [showDates, setshowDates] = useState(false);
 
     const date = new Date();
     const dateNow = date.toISOString().split('T')[0];
 
-    const [colaboradores, setColaboradores] = useState([]);
+    const [taskAttributes, setTaskAttributes] = useState({
+        estado: '',
+        prioridad: '',
+        fecha_inicio: dateNow,
+        fecha_fin: dateNow,
+        colaborador: '',
+    });
 
-    //estado
-    const opsEstado = [
-        { id: 1, nombre: "Pendiente" },
-        { id: 2, nombre: "En Proceso" },
-        { id: 3, nombre: "Finalizada" }
-    ];
-
-    //llenar combobox de prioridad
-    const opsPrioridad = [
-        { id: 1, nombre: "Alta" },
-        { id: 2, nombre: "Media" },
-        { id: 3, nombre: "Baja" }
-
-    ];
-
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === "Escape") {
-                setCloseFiltro(false);
-            }
-        };
-        document.addEventListener("keydown", handleKeyDown);
-        return () => {
-            document.removeEventListener("keydown", handleKeyDown);
-        };
-    }, []);
+    const body = {
+        estado_id: taskAttributes.estado,
+        prioridad_id: taskAttributes.prioridad,
+        fecha_inicio: showDates ? taskAttributes.fecha_inicio : null,
+        fecha_fin: showDates ? taskAttributes.fecha_fin : null,
+        colab_id: taskAttributes.colaborador,
+    };
 
     useEffect(() => {
         AdminTasksAPI.get('/colaborador/colaboradores')
             .then(resp => {
-                setColaboradores(resp.data.data);
+                setColaborators(resp.data.data);
+            });
+        AdminTasksAPI.get('/estado/estados')
+            .then(resp => {
+                setStates(resp.data.data);
+            });
+        AdminTasksAPI.get('/prioridad/prioridades')
+            .then(resp => {
+                setPriority(resp.data.data);
             });
     }, []);
+
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setTaskAttributes(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+
+    };
+
+    const TaskFilter = () => {
+        setBodyFilter(body);
+        setIsFiltering(true);
+        setCloseModalFilter(false)
+    }
+
+    const handleCheckboxChange = (event) => {
+        setshowDates(event.target.checked);
+    };
 
     return (
         <>
             {
-                closeFiltro && <>
-                    {
-                        <div {...props} className="Modal_t">
-                            <div className="modal-container">
-                                <form className="row g-3" onSubmit={ev => {
-                                    ev.preventDefault();
-                                }}>
-                                    <Combobox
-                                        lblContent={'Estado:'}
-                                        options={opsEstado}
-                                        id={'estado'}
-                                        name={'estado'}
-                                    />
-                                    <Combobox
-                                        options={opsPrioridad}
-                                        lblContent={'Prioridad'}
-                                        id={'prioridad'}
-                                        name={'prioridad'}
+                closeModalFilter &&
+                <div className="modal-task">
+                    <div className="modal-container">
+                        <form className="row g-3" onSubmit={ev => {
+                            ev.preventDefault();
+                            TaskFilter();
+                        }}>
+                            <h3>Filtrar
+                                <img
+                                    className="actions-icon"
+                                    src={FilterIcon} alt="" />
+                            </h3>
+                            <Combobox
+                                options={colaborators}
+                                lblContent={'Colaborador:'}
+                                id={'colaborador'}
+                                col={'colab'}
+                                name={'colaborador'}
+                                onChange={e => handleChange(e)}
+                                value={taskAttributes.colaborador}
+                                extOption={'Todos'}
+                            />
+                            <Combobox
+                                lblContent={'Estado:'}
+                                options={states}
+                                id={'estado'}
+                                name={'estado'}
+                                onChange={e => handleChange(e)}
+                                value={taskAttributes.estado}
+                                extOption={'Todos'}
+                            />
+                            <Combobox
+                                options={priority}
+                                lblContent={'Prioridad'}
+                                id={'prioridad'}
+                                name={'prioridad'}
+                                onChange={e => handleChange(e)}
+                                extOption={'Todos'}
+                                value={taskAttributes.prioridad}
+                            />
+                            <div className="checkBox-container">
+                                <input
+                                    className={''}
+                                    type="checkbox"
+                                    id="checkboxFechas"
+                                    checked={showDates}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <span>
+                                    Rango de Fechas
+                                </span>
+                            </div>
+                            {
+                                showDates && <>
 
-                                    />
                                     <Input
                                         divClassName={'col-md-6'}
                                         type={'date'}
@@ -75,8 +131,9 @@ export const FilterModal = ({ closeFiltro, setCloseFiltro, tarea, ...props }) =>
                                         name={'fecha_inicio'}
                                         required={true}
                                         lblContent={'Fecha de Inicio:'}
-                                        min={dateNow}
-
+                                        onChange={e => handleChange(e)}
+                                        value={taskAttributes.fecha_inicio}
+                                        className={'form-control date-input-icon'}
                                     />
                                     <Input
                                         divClassName={'col-md-6'}
@@ -85,35 +142,30 @@ export const FilterModal = ({ closeFiltro, setCloseFiltro, tarea, ...props }) =>
                                         name={'fecha_fin'}
                                         required={true}
                                         lblContent={'Fecha de Finalización:'}
+                                        onChange={handleChange}
+                                        value={taskAttributes.fecha_fin}
+                                        className={'form-control date-input-icon'}
                                     />
-                                    <Combobox
-                                        options={colaboradores}
-                                        lblContent={'Colaborador:'}
-                                        id={'colaborador'}
-                                        name={'colaborador'}
-                                    />
-                                    <div className="modal_footer">
-                                        <Button
-                                            type={'button'}
-                                            className={'btn btn-secondary m_btn'}
-                                            content={'X'}
-                                            onClick={() => setCloseFiltro(false)} />
-                                        <Button
-                                            className={'btn btn-primary m_btn'}
-                                            content={'Todos'} />
-                                        <Button
-                                            className={'btn btn-primary m_btn'}
-                                            content={'Filtrar'} />
-                                    </div>
-                                </form>
+                                </>
+                            }
+
+                            <div className="modal-footer">
+                                <Button
+                                    type={'button'}
+                                    className={'btn btn-warning modal-btn'}
+                                    content={'Cerrar'}
+                                    onClick={() => setCloseModalFilter(false)} />
+
+                                <Button
+                                    className={'btn btn-success modal-btn'}
+                                    content={'Buscar'} />
                             </div>
-                        </div>
+                        </form>
+                    </div>
 
-                    }
-                </>
-
+                </div>
             }
-        </>
 
+        </>
     );
-};
+}

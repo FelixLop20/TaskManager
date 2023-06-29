@@ -16,13 +16,17 @@ import ProgressIcon from '../resources/progress.png'
 import TaskIcon from '../resources/task.png'
 import AddIcon from '../resources/Add.png'
 import FilterIcon from '../resources/filter.png'
+import { FilterModal } from "../components/FilterModal";
 
 export const Home = () => {
 
     const [tasks, setTasks] = useState([]);
     const [closeModal, setCloseModal] = useState(false);
+    const [closeModalFilter, setCloseModalFilter] = useState(false);
     const [editTask, setEditTask] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
+    const [isFiltering, setIsFiltering] = useState(false);
+    const [bodyFilter, setBodyFilter] = useState([]);
 
     const obtenertasks = () => {
         AdminTasksAPI.get('/tarea/tareas')
@@ -32,6 +36,22 @@ export const Home = () => {
             });
 
     };
+    const TaskFilter = () => {
+        try {
+            console.log(bodyFilter);
+            AdminTasksAPI.post('/tarea/filtrartareas', bodyFilter)
+                .then(res => {
+                    console.log("Perroo", res.data.data);
+                    setTasks(res.data.data);
+                })
+                .catch(error => {
+                    console.error('Error al crear la tarea:', error);
+                });
+        } catch (error) {
+            console.error('Error al enviar la solicitud:', error);
+        }
+    }
+
     const eliminarTarea = (id) => {
         AdminTasksAPI.delete(`/tarea/eliminartarea/${id}`).then(res => {
             console.log(res.data.data);
@@ -40,16 +60,26 @@ export const Home = () => {
     };
 
     useEffect(() => {
-        obtenertasks();
-    }, [closeModal]);
+        if (!isFiltering) {
+            obtenertasks();
+        }
+        console.log('Chaleee');
+    }, [closeModal, isFiltering]);
+
+    useEffect(() => {
+        console.log('Filtrando');
+        if (isFiltering) {
+            TaskFilter();
+        }
+    }, [isFiltering, closeModalFilter]);
 
 
     const statesContent = {
         1: (className) => <img className={className} src={PendingIcon} alt="" />,
         2: (className) => <img className={className} src={ProgressIcon} alt="" />,
         3: (className) => <img className={className} src={CompleteIcon} alt="" />,
-      };
-      
+    };
+
     return (
         <>
             <div className="container">
@@ -73,16 +103,24 @@ export const Home = () => {
                             type={'button'}
                             className={'btn btn-primary add-button'}
                             content={<>Filtrar <img className="states-icon" src={FilterIcon} alt="" /></>}
-
+                            onClick={() => setCloseModalFilter(true)}
                             style={{ margin: '5px' }}
 
                         />
+                        {
+                            isFiltering && <Button
+                                type={'button'}
+                                className={'btn btn-primary modal-btn'}
+                                content={'Todas'}
+                                onClick={() => { setIsFiltering(false) }} />
+                        }
+
 
                     </div>
                     <div className="states-desc">
-                       <p className="states">Pendiente: {statesContent[1]('desc-states-icon')}</p>
-                       <p className="states">En proceso: {statesContent[2]('desc-states-icon')}</p>
-                       <p className="states">Finalizada: {statesContent[3]('desc-states-icon')}</p>
+                        <p className="states">Pendiente: {statesContent[1]('desc-states-icon')}</p>
+                        <p className="states">En proceso: {statesContent[2]('desc-states-icon')}</p>
+                        <p className="states">Finalizada: {statesContent[3]('desc-states-icon')}</p>
                     </div>
                 </div>
 
@@ -144,6 +182,14 @@ export const Home = () => {
                     task={editTask}
                     isEditing={isEditing}
                     setIsEditing={setIsEditing}
+
+                />
+
+                <FilterModal
+                    setCloseModalFilter={setCloseModalFilter}
+                    closeModalFilter={closeModalFilter}
+                    setIsFiltering={setIsFiltering}
+                    setBodyFilter={setBodyFilter}
                 />
 
             </div>
