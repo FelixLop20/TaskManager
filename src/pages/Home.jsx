@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Header } from "../components/Header";
 import { Tditem } from "../components/table/Tditem";
 import { Button } from "../components/form/Button";
@@ -8,6 +9,7 @@ import { Link } from "react-router-dom";
 import { AdminTasksAPI } from "../api/AdminTasksAPI";
 import { Thead } from "../components/table/Thead";
 import { Thitem } from "../components/table/Thitem";
+
 import DeleteIcon from '../resources/delete-icon.png'
 import EditIcon from '../resources/edit-icon.png'
 import PendingIcon from '../resources/pending.png'
@@ -16,6 +18,7 @@ import ProgressIcon from '../resources/progress.png'
 import TaskIcon from '../resources/task.png'
 import AddIcon from '../resources/Add.png'
 import FilterIcon from '../resources/filter.png'
+
 import { FilterModal } from "../components/FilterModal";
 import { ViewTaskModal } from "../components/ViewTaskModal";
 import { InfoView } from "../components/InfoView";
@@ -23,15 +26,15 @@ import { InfoView } from "../components/InfoView";
 export const Home = () => {
 
     const [tasks, setTasks] = useState([]);
-    const [closeModal, setCloseModal] = useState(false);
-    const [closeModalFilter, setCloseModalFilter] = useState(false);
-    const [closeViewTaskModal, setCloseViewTaskModal] = useState(false);
+    const [openTaskModal, setOpenTaskModal] = useState(false);
+    const [openFilterModal, setOpenFilterModal] = useState(false);
+    const [openViewTaskModal, setOpenViewTaskModal] = useState(false);
     const [editTask, setEditTask] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isFiltering, setIsFiltering] = useState(false);
     const [bodyFilter, setBodyFilter] = useState([]);
     const [selectedTask, setSelectedTask] = useState([]);
-    const [show, setShow] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
     const [viewContent, setViewContent] = useState([]);
     const [Icon, setIcon] = useState([]);
 
@@ -68,13 +71,13 @@ export const Home = () => {
         if (!isFiltering) {
             obtenertasks();
         }
-    }, [closeModal, isFiltering, closeViewTaskModal]);
+    }, [openTaskModal, isFiltering, openViewTaskModal]);
 
     useEffect(() => {
         if (isFiltering) {
             TaskFilter();
         }
-    }, [isFiltering, closeModalFilter]);
+    }, [isFiltering, openFilterModal]);
 
 
     const statesContent = {
@@ -85,17 +88,17 @@ export const Home = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setShow(false);
+            setShowPopup(false);
         }, 3000);
 
         return () => clearTimeout(timer);
-    }, [show]);
+    }, [showPopup]);
 
     return (
         <>
             <div className="container">
                 {
-                    show && <InfoView Icon={Icon} content={viewContent} />
+                    showPopup && <InfoView Icon={Icon} content={viewContent} />
                 }
                 <Header
                     className={'main-title'}
@@ -113,7 +116,7 @@ export const Home = () => {
                             content={<>Crear Tarea<img className="states-icon" src={AddIcon} alt="" /></>}
                             style={{ margin: '5px' }}
                             onClick={() => {
-                                setCloseModal(true);
+                                setOpenTaskModal(true);
                                 setIsEditing(false)
                             }}
                         />
@@ -121,7 +124,7 @@ export const Home = () => {
                             type={'button'}
                             className={'btn btn-primary add-button'}
                             content={<>Filtrar <img className="states-icon" src={FilterIcon} alt="" /></>}
-                            onClick={() => setCloseModalFilter(true)}
+                            onClick={() => setOpenFilterModal(true)}
                             style={{ margin: '5px' }}
 
                         />
@@ -161,7 +164,7 @@ export const Home = () => {
                         <tbody>
                             {tasks.map((item, index) => (
                                 <tr onClick={() => { setSelectedTask(item) }} className="table-row" key={index}>
-                                    <Tditem onClick={() => setCloseViewTaskModal(true)} props={item.descripcion} />
+                                    <Tditem onClick={() => setOpenViewTaskModal(true)} props={item.descripcion} />
                                     <Tditem props={item.prioridad.descripcion} />
                                     <Tditem props={statesContent[item.estado.id]('states-icon')} />
                                     <Tditem props={item.fecha_inicio} />
@@ -181,7 +184,7 @@ export const Home = () => {
                                                     exact='true'
                                                     onClick={() => {
                                                         setEditTask(item);
-                                                        setCloseModal(true);
+                                                        setOpenTaskModal(true);
                                                         setIsEditing(true)
                                                     }}
                                                 ><img className="actions-icon" src={EditIcon} alt="" /></Link></>
@@ -195,31 +198,31 @@ export const Home = () => {
                 </div>
 
                 <TaskModal
-                    setCloseModal={setCloseModal}
-                    closeModal={closeModal}
+                    setOpenTaskModal={setOpenTaskModal}
+                    openTaskModal={openTaskModal}
                     task={editTask}
                     isEditing={isEditing}
                     setIsEditing={setIsEditing}
-                    setOpenView={setShow}
+                    setShowPopup={setShowPopup}
                     setViewContent={setViewContent}
                     setIcon={setIcon}
 
                 />
 
                 <FilterModal
-                    setCloseModalFilter={setCloseModalFilter}
-                    closeModalFilter={closeModalFilter}
+                    setOpenFilterModal={setOpenFilterModal}
+                    openFilterModal={openFilterModal}
                     setIsFiltering={setIsFiltering}
                     setBodyFilter={setBodyFilter}
-                  
+
                 />
 
                 <ViewTaskModal
-                    setCloseViewTaskModal={setCloseViewTaskModal}
-                    closeViewTaskModal={closeViewTaskModal}
+                    setOpenViewTaskModal={setOpenViewTaskModal}
+                    openViewTaskModal={openViewTaskModal}
                     selectedTask={selectedTask}
                     setViewContent={setViewContent}
-                    setShow={setShow}
+                    setShowPopup={setShowPopup}
                     setIcon={setIcon}
                 />
 

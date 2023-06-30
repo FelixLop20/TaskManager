@@ -1,12 +1,25 @@
 import React from "react";
+
 import { useEffect, useState } from "react";
 import { Button } from "./form/Button";
-import { AdminTasksAPI } from "../api/AdminTasksAPI";
 import { Combobox } from "./form/Combobox";
 import { Input } from "./form/Input";
+
 import FilterIcon from '../resources/filter.png'
 
-export const FilterModal = ({ closeModalFilter, setCloseModalFilter, isFiltering, setIsFiltering, setBodyFilter }) => {
+import {
+    readColaboratos,
+    readPriorities,
+    readStates,
+} from "../api/AdminTasksAPI";
+
+
+export const FilterModal = ({
+    openFilterModal,
+    setOpenFilterModal,
+    setIsFiltering,
+    setBodyFilter
+}) => {
 
     const [colaborators, setColaborators] = useState([]);
     const [states, setStates] = useState([]);
@@ -33,17 +46,14 @@ export const FilterModal = ({ closeModalFilter, setCloseModalFilter, isFiltering
     };
 
     useEffect(() => {
-        AdminTasksAPI.get('/colaborador/colaboradores')
-            .then(resp => {
-                setColaborators(resp.data.data);
-            });
-        AdminTasksAPI.get('/estado/estados')
-            .then(resp => {
-                setStates(resp.data.data);
-            });
-        AdminTasksAPI.get('/prioridad/prioridades')
-            .then(resp => {
-                setPriority(resp.data.data);
+        Promise.all([readColaboratos(), readPriorities(), readStates()])
+            .then(([colabs, priorities, states]) => {
+                setColaborators(colabs);
+                setPriority(priorities);
+                setStates(states);
+            })
+            .catch(error => {
+                alert(error);
             });
     }, []);
 
@@ -64,17 +74,18 @@ export const FilterModal = ({ closeModalFilter, setCloseModalFilter, isFiltering
             taskAttributes.prioridad !== '' ||
             showDates
         )
-        setCloseModalFilter(false)
+        setOpenFilterModal(false);
     }
 
     const handleCheckboxChange = (event) => {
         setshowDates(event.target.checked);
     };
+    
 
     return (
         <>
             {
-                closeModalFilter &&
+                openFilterModal &&
                 <div className="modal-task">
                     <div className="modal-container">
                         <form className="row g-3" onSubmit={ev => {
@@ -159,7 +170,7 @@ export const FilterModal = ({ closeModalFilter, setCloseModalFilter, isFiltering
                                     type={'button'}
                                     className={'btn btn-warning modal-btn'}
                                     content={'Cerrar'}
-                                    onClick={() => setCloseModalFilter(false)} />
+                                    onClick={() => setOpenFilterModal(false)} />
 
                                 <Button
                                     className={'btn btn-success modal-btn'}

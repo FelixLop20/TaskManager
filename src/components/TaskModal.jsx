@@ -1,16 +1,32 @@
 import React, { useState, useEffect } from "react";
+
 import { Input } from "./form/Input";
 import { Textarea } from "./form/Textarea";
 import { Combobox } from "./form/Combobox";
-import { AdminTasksAPI } from "../api/AdminTasksAPI";
 import { Button } from "./form/Button";
+
 import EditIcon from '../resources/edit-icon.png'
 import AddIcon from '../resources/Add.png'
-import { InfoView } from "./InfoView";
-import CancelIcon from '../resources/cancel.png'
 import Like from '../resources/like.png'
 
-export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEditing, setOpenView, setViewContent, setIcon }) => {
+import {
+    readColaboratos,
+    readPriorities,
+    readStates,
+    createTask,
+    editTask
+} from "../api/AdminTasksAPI";
+
+export const TaskModal = ({
+    openTaskModal,
+    setOpenTaskModal,
+    task, 
+    isEditing,
+    setIsEditing,
+    setShowPopup,
+    setViewContent,
+    setIcon
+}) => {
 
     const [colaborators, setColaborators] = useState([]);
     const [states, setStates] = useState([]);
@@ -19,50 +35,16 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
     const dateNow = date.toISOString().split('T')[0];
     const [taskAttributes, setTaskAttributes] = useState([]);
 
-
-    useEffect(() => {
-        AdminTasksAPI.get('/colaborador/colaboradores')
-            .then(resp => {
-                setColaborators(resp.data.data);
-            });
-        AdminTasksAPI.get('/estado/estados')
-            .then(resp => {
-                setStates(resp.data.data);
-            });
-        AdminTasksAPI.get('/prioridad/prioridades')
-            .then(resp => {
-                setPriority(resp.data.data);
-            });
-    }, []);
-
-
-    useEffect(() => {
-        if (isEditing) {
-            const data = {
-                id: task.id,
-                descripcion: task.descripcion,
-                estado: task.estado.id,
-                prioridad: task.prioridad.id,
-                fecha_inicio: task.fecha_inicio,
-                fecha_fin: task.fecha_fin,
-                colaborador: task.colaborador.id,
-                notas: task.notas || ''
-            }
-            setTaskAttributes(data)
-        } else if (!isEditing) {
-            setTaskAttributes({
-                descripcion: '',
-                estado: 1,
-                prioridad: 1,
-                fecha_inicio: dateNow,
-                fecha_fin: dateNow,
-                colaborador: 1,
-                notas: ''
-            });
-        }
-
-    }, [task, isEditing]);
-
+    const cleanFields = {
+        id: null,
+        descripcion: '',
+        estado: 1,
+        prioridad: 1,
+        fecha_inicio: dateNow,
+        fecha_fin: dateNow,
+        colaborador: 1,
+        notas: ''
+    }
     const body = {
         descripcion: taskAttributes.descripcion,
         estado_id: taskAttributes.estado,
@@ -72,6 +54,25 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
         colab_id: taskAttributes.colaborador,
         notas: taskAttributes.notas
     };
+
+    const data = {
+        id: task?.id,
+        descripcion: task?.descripcion || '',
+        estado: task?.estado?.id || 1,
+        prioridad: task?.prioridad?.id || 1,
+        fecha_inicio: task?.fecha_inicio || dateNow,
+        fecha_fin: task?.fecha_fin || dateNow,
+        colaborador: task?.colaborador?.id || 1,
+        notas: task?.notas || ''
+    };
+
+    const handleEditAndCreate = (res) => {
+        setShowPopup(true)
+        setOpenTaskModal(false)
+        setViewContent(res);
+        setIcon(Like);
+        setTaskAttributes(cleanFields);
+    }
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -89,45 +90,54 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
         }
     };
 
-    const createTask = () => {
+    const cTask = () => {
         try {
-            AdminTasksAPI.post('/tarea/creartarea', body)
+            createTask(body)
                 .then(res => {
-                    setOpenView(true)
-                    setCloseModal(false)
-                    setViewContent(res.data.message);
-                    setIcon(Like);
-                })
-                .catch(error => {
-                    console.clear();
-                    alert(error)
-                });
-        } catch (error) {
-            console.error('Error al enviar la solicitud:', error);
-        }
-    };
-
-    const editTask = async () => {
-
-        try {
-            await AdminTasksAPI.put(`/tarea/editartarea/${taskAttributes.id}`, body)
-                .then(res => {
-                    setOpenView(true)
-                    setCloseModal(false)
-                    setViewContent(res.data.message);
-                    setIcon(Like);
+                    handleEditAndCreate(res);
                 }).catch(error => {
-                    alert(error.response.data.message);
+                    alert(error);
                 })
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
-        }
+        };
     };
+
+    const eTask = async () => {
+        try {
+            editTask(taskAttributes.id, body)
+                .then(res => {
+                    handleEditAndCreate(res);
+                }).catch(error => {
+                    alert(error);
+                })
+        } catch (error) {
+            console.error('Error al enviar la solicitud:', error);
+        };
+    };
+
+    useEffect(() => {
+        Promise.all([readColaboratos(), readPriorities(), readStates()])
+            .then(([colabs, priorities, states]) => {
+                setColaborators(colabs);
+                setPriority(priorities);
+                setStates(states);
+            })
+            .catch(error => {
+                alert(error);
+            });
+    }, []);
+
+    useEffect(() => {
+        setTaskAttributes(data);
+        // eslint-disable-next-line
+    }, [task]);
+
 
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
-                setCloseModal(false);
+                setOpenTaskModal(false);
                 setIsEditing(false);
             }
         };
@@ -135,20 +145,20 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
+        // eslint-disable-next-line
     }, []);
 
     return (
         <>
             {
-                closeModal && <>
+                openTaskModal && <>
                     {
-
                         <div className="modal-task">
 
                             <div className="modal-container">
                                 <form className="row g-3" onSubmit={ev => {
                                     ev.preventDefault();
-                                    isEditing ? editTask() : createTask();
+                                    isEditing ? eTask() : cTask();
                                 }}>
                                     {
                                         <h3>{
@@ -246,7 +256,11 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                                             type={'button'}
                                             className={'btn btn-warning modal-btn'}
                                             content={'Cerrar'}
-                                            onClick={() => { setCloseModal(false); setIsEditing(false) }} />
+                                            onClick={() => {
+                                                setOpenTaskModal(false);
+                                                setIsEditing(false);
+                                                setTaskAttributes(cleanFields);
+                                            }} />
 
                                         <Button
                                             className={'btn btn-success modal-btn'}

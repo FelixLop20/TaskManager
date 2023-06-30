@@ -7,7 +7,14 @@ import { AdminTasksAPI } from "../api/AdminTasksAPI"
 import CancelIcon from '../resources/cancel.png'
 import Like from '../resources/like.png'
 
-export const ViewTaskModal = ({ closeViewTaskModal, setCloseViewTaskModal, selectedTask, setViewContent, setShow, setIcon }) => {
+export const ViewTaskModal = ({
+    openViewTaskModal,
+    setOpenViewTaskModal,
+    selectedTask,
+    setViewContent,
+    setShowPopup,
+    setIcon
+}) => {
 
     const priorityContent = {
         1: 'Alta',
@@ -25,12 +32,12 @@ export const ViewTaskModal = ({ closeViewTaskModal, setCloseViewTaskModal, selec
             const body = { estado_id: estado_id };
             await AdminTasksAPI.put(`/tarea/estado/${task_id}`, body)
                 .then(res => {
-                    setCloseViewTaskModal(false);
-                    setShow(true);
+                    setOpenViewTaskModal(false);
+                    setShowPopup(true);
                     setIcon(Like);
                 }).catch(error => {
                     setViewContent('Agrega un colaborador');
-                    setShow(true);
+                    setShowPopup(true);
                     setIcon(CancelIcon);
                 })
         } catch (error) {
@@ -40,15 +47,15 @@ export const ViewTaskModal = ({ closeViewTaskModal, setCloseViewTaskModal, selec
 
     const eliminarTarea = (id) => {
         AdminTasksAPI.delete(`/tarea/eliminartarea/${id}`).then(res => {
-            setCloseViewTaskModal(false);
-            setShow(true);
+            setOpenViewTaskModal(false);
+            setShowPopup(true);
         })
     };
 
     return (
         <>
             {
-                closeViewTaskModal && <>
+                openViewTaskModal && <>
                     <div className="modal-task">
                         <div className="modal-container">
                             <div className="view-task">
@@ -63,7 +70,7 @@ export const ViewTaskModal = ({ closeViewTaskModal, setCloseViewTaskModal, selec
                                     type={'button'}
                                     className={'btn btn-warning modal-btn'}
                                     content={'Cerrar'}
-                                    onClick={() => setCloseViewTaskModal(false)} />
+                                    onClick={() => setOpenViewTaskModal(false)} />
 
                                 {selectedTask.estado.id === 1 && (
                                     <Button
