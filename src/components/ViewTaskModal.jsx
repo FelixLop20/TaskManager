@@ -3,20 +3,46 @@ import { Button } from "./form/Button";
 import PendingIcon from '../resources/pending.png'
 import CompleteIcon from '../resources/complete.png'
 import ProgressIcon from '../resources/progress.png'
+import { AdminTasksAPI } from "../api/AdminTasksAPI"
+import CancelIcon from '../resources/cancel.png'
+import Like from '../resources/like.png'
 
-export const ViewTaskModal = ({ closeViewTaskModal, setCloseViewTaskModal, selectedTask }) => {
+export const ViewTaskModal = ({ closeViewTaskModal, setCloseViewTaskModal, selectedTask, setViewContent, setShow, setIcon }) => {
 
     const priorityContent = {
         1: 'Alta',
         2: 'Media',
         3: 'Baja',
     };
-
-
     const statesImgs = {
         1: <img className="states-icon" src={PendingIcon} alt="" />,
         2: <img className="states-icon" src={ProgressIcon} alt="" />,
         3: <img className="states-icon" src={CompleteIcon} alt="" />,
+    };
+
+    const changeState = async (task_id, estado_id) => {
+        try {
+            const body = { estado_id: estado_id };
+            await AdminTasksAPI.put(`/tarea/estado/${task_id}`, body)
+                .then(res => {
+                    setCloseViewTaskModal(false);
+                    setShow(true);
+                    setIcon(Like);
+                }).catch(error => {
+                    setViewContent('Agrega un colaborador');
+                    setShow(true);
+                    setIcon(CancelIcon);
+                })
+        } catch (error) {
+            console.error('Error al enviar la solicitud:', error);
+        }
+    }
+
+    const eliminarTarea = (id) => {
+        AdminTasksAPI.delete(`/tarea/eliminartarea/${id}`).then(res => {
+            setCloseViewTaskModal(false);
+            setShow(true);
+        })
     };
 
     return (
@@ -40,13 +66,33 @@ export const ViewTaskModal = ({ closeViewTaskModal, setCloseViewTaskModal, selec
                                     onClick={() => setCloseViewTaskModal(false)} />
 
                                 {selectedTask.estado.id === 1 && (
-                                    <Button className={'btn btn-success modal-btn'} content={'Iniciar'} />
+                                    <Button
+                                        className={'btn btn-success modal-btn'}
+                                        content={'Iniciar'}
+                                        onClick={() => {
+                                            changeState(selectedTask.id, 2);
+                                            setViewContent('Tarea Iniciada');
+                                        }} />
+
                                 )}
                                 {(selectedTask.estado.id === 1 || selectedTask.estado.id === 2) && (
-                                    <Button className={'btn btn-danger modal-btn'} content={'Finalizar'} />
+                                    <Button
+                                        className={'btn btn-danger modal-btn'}
+                                        content={'Finalizar'}
+                                        onClick={() => {
+                                            changeState(selectedTask.id, 3);
+                                            setViewContent('Tarea Completada');
+                                        }
+                                        } />
                                 )}
                                 {selectedTask.estado.id === 3 && (
-                                    <Button className={'btn btn-danger modal-btn'} content={'Eliminar'} />
+                                    <Button
+                                        className={'btn btn-danger modal-btn'}
+                                        content={'Eliminar'}
+                                        onClick={() => {
+                                            eliminarTarea(selectedTask.id);
+                                            setViewContent('Tarea Eliminada');
+                                        }} />
                                 )}
                             </div>
                         </div>

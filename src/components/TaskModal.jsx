@@ -7,8 +7,10 @@ import { Button } from "./form/Button";
 import EditIcon from '../resources/edit-icon.png'
 import AddIcon from '../resources/Add.png'
 import { InfoView } from "./InfoView";
+import CancelIcon from '../resources/cancel.png'
+import Like from '../resources/like.png'
 
-export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEditing, setOpenView, setViewContent }) => {
+export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEditing, setOpenView, setViewContent, setIcon }) => {
 
     const [colaborators, setColaborators] = useState([]);
     const [states, setStates] = useState([]);
@@ -94,10 +96,11 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                     setOpenView(true)
                     setCloseModal(false)
                     setViewContent(res.data.message);
+                    setIcon(Like);
                 })
                 .catch(error => {
                     console.clear();
-                    alert(error.response.data.message)
+                    alert(error)
                 });
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
@@ -112,6 +115,7 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
                     setOpenView(true)
                     setCloseModal(false)
                     setViewContent(res.data.message);
+                    setIcon(Like);
                 }).catch(error => {
                     alert(error.response.data.message);
                 })

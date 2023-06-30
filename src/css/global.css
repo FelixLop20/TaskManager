@@ -20,14 +20,8 @@ body {
   margin-bottom: 20px;
 }
 
-.container {
-  margin-top: 2%;
-
-}
-
-.add-button {
-  margin-bottom: 15px;
-}
+.container { margin-top: 2%;}
+.add-button {margin-bottom: 15px;}
 
 .button-content {
   width: 100%;
@@ -229,6 +223,10 @@ body {
   color: #ffffff;
 }
 
+.btn-warning:active{
+  color: red;
+}
+
 .checkBox-container {
   display: flex;
   align-items: center;
@@ -246,7 +244,7 @@ body {
 
 
 .pop-up {
-  width: 200px;
+  width: auto;
   color:black;
   position: fixed;
   bottom: 20px;

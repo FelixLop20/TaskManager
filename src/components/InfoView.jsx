@@ -1,11 +1,10 @@
 import React from "react";
-import Like from '../resources/like.png'
-export const InfoView = ({ content }) => {
+export const InfoView = ({ content, Icon }) => {
     return (
         <>
             <div className="pop-up">
                 <div className="pop-up-content">
-                    <p className="info-content">{content} <img className="OK" src={Like} alt="" /></p>
+                    <p className="info-content">{content} <img className="OK" src={Icon} alt="" /></p>
                     <div className="progress-bar"></div>
                 </div>
             </div>

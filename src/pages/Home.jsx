@@ -33,6 +33,7 @@ export const Home = () => {
     const [selectedTask, setSelectedTask] = useState([]);
     const [show, setShow] = useState(false);
     const [viewContent, setViewContent] = useState([]);
+    const [Icon, setIcon] = useState([]);
 
     const obtenertasks = () => {
         AdminTasksAPI.get('/tarea/tareas')
@@ -67,7 +68,7 @@ export const Home = () => {
         if (!isFiltering) {
             obtenertasks();
         }
-    }, [closeModal, isFiltering]);
+    }, [closeModal, isFiltering, closeViewTaskModal]);
 
     useEffect(() => {
         if (isFiltering) {
@@ -84,21 +85,25 @@ export const Home = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-          setShow(false);
+            setShow(false);
         }, 3000);
-    
+
         return () => clearTimeout(timer);
-      }, [show]);
+    }, [show]);
 
     return (
         <>
             <div className="container">
                 {
-                  show &&  <InfoView content={viewContent} />
+                    show && <InfoView Icon={Icon} content={viewContent} />
                 }
                 <Header
                     className={'main-title'}
-                    content={<>Administador de Tareas <img className="icon-title" src={TaskIcon} alt="" /></>}
+                    content={<>Administador de Tareas
+                        <img className="icon-title"
+                            src={TaskIcon} alt=""
+                        />
+                    </>}
                 />
                 <div className="options-content">
                     <div className="button-content">
@@ -197,6 +202,7 @@ export const Home = () => {
                     setIsEditing={setIsEditing}
                     setOpenView={setShow}
                     setViewContent={setViewContent}
+                    setIcon={setIcon}
 
                 />
 
@@ -205,12 +211,16 @@ export const Home = () => {
                     closeModalFilter={closeModalFilter}
                     setIsFiltering={setIsFiltering}
                     setBodyFilter={setBodyFilter}
+                  
                 />
 
                 <ViewTaskModal
                     setCloseViewTaskModal={setCloseViewTaskModal}
                     closeViewTaskModal={closeViewTaskModal}
                     selectedTask={selectedTask}
+                    setViewContent={setViewContent}
+                    setShow={setShow}
+                    setIcon={setIcon}
                 />
 
             </div>
