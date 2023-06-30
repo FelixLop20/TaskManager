@@ -1,7 +1,7 @@
 import React from "react";
 
-export const Tditem = ({ props, onClick }) => {
+export const Tditem = ({ props, onClick, className }) => {
     return (
-        <td onClick={onClick}>{props}</td>
+        <td className={className} onClick={onClick}>{props}</td>
     );
 }

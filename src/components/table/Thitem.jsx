@@ -1,7 +1,7 @@
 import React from "react";
 
-export const Thitem = ({ props }) => {
+export const Thitem = ({ props, className }) => {
     return (
-        <th>{props}</th>
+        <th className={className}>{props}</th>
     );
 }

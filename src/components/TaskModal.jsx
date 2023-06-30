@@ -6,9 +6,9 @@ import { AdminTasksAPI } from "../api/AdminTasksAPI";
 import { Button } from "./form/Button";
 import EditIcon from '../resources/edit-icon.png'
 import AddIcon from '../resources/Add.png'
+import { InfoView } from "./InfoView";
 
-
-export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEditing }) => {
+export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEditing, setOpenView, setViewContent }) => {
 
     const [colaborators, setColaborators] = useState([]);
     const [states, setStates] = useState([]);
@@ -91,8 +91,9 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
         try {
             AdminTasksAPI.post('/tarea/creartarea', body)
                 .then(res => {
-                    alert(res.data.message);
-                    setCloseModal(false);
+                    setOpenView(true)
+                    setCloseModal(false)
+                    setViewContent(res.data.message);
                 })
                 .catch(error => {
                     console.clear();
@@ -102,22 +103,23 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
             console.error('Error al enviar la solicitud:', error);
         }
     };
-    
-    const editTask = () => {
-        
+
+    const editTask = async () => {
+
         try {
-            AdminTasksAPI.put(`/tarea/editartarea/${taskAttributes.id}`, body)
+            await AdminTasksAPI.put(`/tarea/editartarea/${taskAttributes.id}`, body)
                 .then(res => {
-                    setCloseModal(false);
-                    console.log(res);
-                }).catch(error=>{
-                   console.log(error);
+                    setOpenView(true)
+                    setCloseModal(false)
+                    setViewContent(res.data.message);
+                }).catch(error => {
+                    alert(error.response.data.message);
                 })
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
         }
     };
-    
+
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
@@ -136,7 +138,9 @@ export const TaskModal = ({ closeModal, setCloseModal, task, isEditing, setIsEdi
             {
                 closeModal && <>
                     {
+
                         <div className="modal-task">
+
                             <div className="modal-container">
                                 <form className="row g-3" onSubmit={ev => {
                                     ev.preventDefault();

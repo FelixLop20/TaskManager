@@ -18,6 +18,7 @@ import AddIcon from '../resources/Add.png'
 import FilterIcon from '../resources/filter.png'
 import { FilterModal } from "../components/FilterModal";
 import { ViewTaskModal } from "../components/ViewTaskModal";
+import { InfoView } from "../components/InfoView";
 
 export const Home = () => {
 
@@ -30,6 +31,8 @@ export const Home = () => {
     const [isFiltering, setIsFiltering] = useState(false);
     const [bodyFilter, setBodyFilter] = useState([]);
     const [selectedTask, setSelectedTask] = useState([]);
+    const [show, setShow] = useState(false);
+    const [viewContent, setViewContent] = useState([]);
 
     const obtenertasks = () => {
         AdminTasksAPI.get('/tarea/tareas')
@@ -42,11 +45,11 @@ export const Home = () => {
         try {
             console.log(bodyFilter);
             AdminTasksAPI.post('/tarea/filtrartareas', bodyFilter)
-                .then(res => {              
+                .then(res => {
                     setTasks(res.data.data);
                 })
                 .catch(error => {
-                   console.log(error);
+                    console.log(error);
                 });
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
@@ -79,9 +82,20 @@ export const Home = () => {
         3: (className) => <img className={className} src={CompleteIcon} alt="" />,
     };
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+          setShow(false);
+        }, 3000);
+    
+        return () => clearTimeout(timer);
+      }, [show]);
+
     return (
         <>
             <div className="container">
+                {
+                  show &&  <InfoView content={viewContent} />
+                }
                 <Header
                     className={'main-title'}
                     content={<>Administador de Tareas <img className="icon-title" src={TaskIcon} alt="" /></>}
@@ -129,7 +143,7 @@ export const Home = () => {
                         <thead>
                             <Thead props={
                                 <>
-                                    <Thitem props={'Tarea'} />
+                                    <Thitem className={'task-width'} props={'Tarea'} />
                                     <Thitem props={'Prioridad'} />
                                     <Thitem props={'Estado'} />
                                     <Thitem props={'Fecha de Inicio'} />
@@ -181,6 +195,8 @@ export const Home = () => {
                     task={editTask}
                     isEditing={isEditing}
                     setIsEditing={setIsEditing}
+                    setOpenView={setShow}
+                    setViewContent={setViewContent}
 
                 />
 
