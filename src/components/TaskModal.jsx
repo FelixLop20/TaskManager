@@ -26,7 +26,8 @@ export const TaskModal = ({
     setIsEditing,
     setShowPopup,
     setViewContent,
-    setIcon
+    setIcon,
+    setIsFiltering
 }) => {
 
     const [colaborators, setColaborators] = useState([]);
@@ -72,11 +73,12 @@ export const TaskModal = ({
     };
 
     const handleEditAndCreate = (res) => {
-        setShowPopup(true)
-        setOpenTaskModal(false)
+        setShowPopup(true);
+        setOpenTaskModal(false);
         setViewContent(res);
         setIcon(Like);
         setTaskAttributes(cleanFields);
+        setIsFiltering(false);
     };
 
     //capturar los valores de los inputs, combobox 

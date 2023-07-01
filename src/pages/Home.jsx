@@ -93,7 +93,6 @@ export const Home = () => {
     useEffect(() => {
         if (isFiltering) {
             tFilter();
-            console.log(tasks);
         }
         // eslint-disable-next-line
     }, [isFiltering, openFilterModal]);
@@ -224,6 +223,7 @@ export const Home = () => {
                     setShowPopup={setShowPopup}
                     setViewContent={setViewContent}
                     setIcon={setIcon}
+                    setIsFiltering={setIsFiltering}
 
                 />
 
