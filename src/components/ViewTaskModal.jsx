@@ -3,7 +3,7 @@ import { Button } from "./form/Button";
 import PendingIcon from '../resources/pending.png'
 import CompleteIcon from '../resources/complete.png'
 import ProgressIcon from '../resources/progress.png'
-import { AdminTasksAPI } from "../api/AdminTasksAPI"
+import { AdminTasksAPI, deleteTask } from "../api/AdminTasksAPI"
 import CancelIcon from '../resources/cancel.png'
 import Like from '../resources/like.png'
 
@@ -21,12 +21,15 @@ export const ViewTaskModal = ({
         2: 'Media',
         3: 'Baja',
     };
+
+    //imagenes para mostrar dependiendo el estado
     const statesImgs = {
         1: <img className="states-icon" src={PendingIcon} alt="" />,
         2: <img className="states-icon" src={ProgressIcon} alt="" />,
         3: <img className="states-icon" src={CompleteIcon} alt="" />,
     };
 
+    //Funcion para dar por iniciada o terminada una tarea
     const changeState = async (task_id, estado_id) => {
         try {
             const body = { estado_id: estado_id };
@@ -43,13 +46,20 @@ export const ViewTaskModal = ({
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
         }
-    }
+    };
 
-    const eliminarTarea = (id) => {
-        AdminTasksAPI.delete(`/tarea/eliminartarea/${id}`).then(res => {
-            setOpenViewTaskModal(false);
-            setShowPopup(true);
-        })
+    const dTask = (id) => {
+        try {
+            deleteTask(id)
+                .then(res => {
+                    setOpenViewTaskModal(false);
+                    setShowPopup(true);
+                }).catch(error => {
+                    alert(error.message);
+                });
+        } catch (error) {
+            console.error('Error al enviar la solicitud:', error);
+        }
     };
 
     return (
@@ -87,7 +97,7 @@ export const ViewTaskModal = ({
                                         className={'btn btn-danger modal-btn'}
                                         content={'Finalizar'}
                                         onClick={() => {
-                                            changeState(selectedTask.id, 3);
+                                            changeState(selectedTask.id, 3); //cambiar el estado
                                             setViewContent('Tarea Completada');
                                         }
                                         } />
@@ -97,7 +107,7 @@ export const ViewTaskModal = ({
                                         className={'btn btn-danger modal-btn'}
                                         content={'Eliminar'}
                                         onClick={() => {
-                                            eliminarTarea(selectedTask.id);
+                                            dTask(selectedTask.id); //eliminar la tarea
                                             setViewContent('Tarea Eliminada');
                                         }} />
                                 )}

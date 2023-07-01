@@ -21,6 +21,7 @@ export const FilterModal = ({
     setBodyFilter
 }) => {
 
+
     const [colaborators, setColaborators] = useState([]);
     const [states, setStates] = useState([]);
     const [priority, setPriority] = useState([]);
@@ -45,6 +46,7 @@ export const FilterModal = ({
         colab_id: taskAttributes.colaborador,
     };
 
+    //capturar todas las promesa
     useEffect(() => {
         Promise.all([readColaboratos(), readPriorities(), readStates()])
             .then(([colabs, priorities, states]) => {
@@ -53,7 +55,7 @@ export const FilterModal = ({
                 setStates(states);
             })
             .catch(error => {
-                alert(error);
+                alert(error.message);
             });
     }, []);
 
@@ -80,7 +82,6 @@ export const FilterModal = ({
     const handleCheckboxChange = (event) => {
         setshowDates(event.target.checked);
     };
-    
 
     return (
         <>

@@ -20,8 +20,13 @@ body {
   margin-bottom: 20px;
 }
 
-.container { margin-top: 2%;}
-.add-button {margin-bottom: 15px;}
+.container {
+  margin-top: 2%;
+}
+
+.add-button {
+  margin-bottom: 15px;
+}
 
 .button-content {
   width: 100%;
@@ -38,6 +43,10 @@ body {
   text-decoration: none;
   border-radius: 5%;
   margin: 3px;
+}
+
+.actions-icon {
+  width: 30px;
 }
 
 .modal-footer {
@@ -125,18 +134,11 @@ body {
   text-align: center;
 }
 
-.task-width{
-  width: 350px  ;
+.task-width {
+  width: 350px;
 }
 
-.task-table tr:last-child td {}
-
-
-.actions-icon {
-  width: 30px;
-}
-
-.actions-icon:hover{
+.actions-icon:hover {
   transform: scale(1.2);
 }
 
@@ -160,6 +162,22 @@ body {
   justify-content: space-between;
   flex-direction: row-reverse;
   margin-bottom: 10px;
+}
+
+@media (max-width: 900px) {
+  .options-content {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .states-desc {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .button-content{
+    justify-content: center;
+  }
 }
 
 .states {
@@ -194,7 +212,7 @@ body {
 
 .form-control[type='date'] {
   background-color: rgb(254, 248, 241);
-  color:rgb(0, 9, 27);
+  color: rgb(0, 9, 27);
   border: 1px solid rgb(221, 221, 221);
 }
 
@@ -210,21 +228,17 @@ body {
   filter: invert(1);
 }
 
-.btn-warning{
+.btn-warning {
   background-color: #ff8800;
   font-weight: bold;
   color: #ffffff;
   border: #ff8800;
 }
 
-.btn-warning:hover{
+.btn-warning:hover {
   background-color: #c06803;
   border: #ff8800;
   color: #ffffff;
-}
-
-.btn-warning:active{
-  color: red;
 }
 
 .checkBox-container {
@@ -233,19 +247,18 @@ body {
 }
 
 .checkBox-container input[type="checkbox"] {
-  margin-right: 8px; 
+  margin-right: 8px;
   margin-left: 8px;
 }
 
-.table-row:hover{
+.table-row:hover {
   cursor: pointer;
   background-color: rgb(5, 28, 51);
 }
 
-
 .pop-up {
   width: auto;
-  color:black;
+  color: black;
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -281,6 +294,7 @@ body {
   0% {
     width: 100%;
   }
+
   100% {
     width: 0;
   }

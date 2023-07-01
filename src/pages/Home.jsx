@@ -6,7 +6,7 @@ import { Button } from "../components/form/Button";
 import { TaskModal } from "../components/TaskModal";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AdminTasksAPI } from "../api/AdminTasksAPI";
+import { getTasks, tasksFilter, deleteTask } from "../api/AdminTasksAPI";
 import { Thead } from "../components/table/Thead";
 import { Thitem } from "../components/table/Thitem";
 
@@ -18,6 +18,7 @@ import ProgressIcon from '../resources/progress.png'
 import TaskIcon from '../resources/task.png'
 import AddIcon from '../resources/Add.png'
 import FilterIcon from '../resources/filter.png'
+import Like from '../resources/like.png';
 
 import { FilterModal } from "../components/FilterModal";
 import { ViewTaskModal } from "../components/ViewTaskModal";
@@ -38,53 +39,64 @@ export const Home = () => {
     const [viewContent, setViewContent] = useState([]);
     const [Icon, setIcon] = useState([]);
 
-    const obtenertasks = () => {
-        AdminTasksAPI.get('/tarea/tareas')
-            .then(resp => {
-                setTasks(resp.data.data);
-            });
-
-    };
-    const TaskFilter = () => {
+    const gTasks = () => {
         try {
-            console.log(bodyFilter);
-            AdminTasksAPI.post('/tarea/filtrartareas', bodyFilter)
-                .then(res => {
-                    setTasks(res.data.data);
+            getTasks()
+                .then(tasks => {
+                    setTasks(tasks);
+                }).catch(error => {
+                    alert(error);
                 })
-                .catch(error => {
-                    console.log(error);
+        } catch (error) {
+            console.error('Error al enviar la solicitud:', error);
+        };
+    };
+
+    const tFilter = () => {
+        try {
+            tasksFilter(bodyFilter)
+                .then(tasks => {
+                    setTasks(tasks);
+                }).catch(error => {
+                    alert(error);
+                })
+        } catch (error) {
+            console.error('Error al enviar la solicitud:', error);
+        };
+    };
+
+    const dTask = (id) => {
+        try {
+            deleteTask(id)
+                .then(res => {
+                    gTasks();
+                }).catch(error => {
+                    alert(error.message);
                 });
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
         }
-    }
-
-    const eliminarTarea = (id) => {
-        AdminTasksAPI.delete(`/tarea/eliminartarea/${id}`).then(res => {
-            console.log(res.data.data);
-            obtenertasks();
-        })
     };
-
-    useEffect(() => {
-        if (!isFiltering) {
-            obtenertasks();
-        }
-    }, [openTaskModal, isFiltering, openViewTaskModal]);
-
-    useEffect(() => {
-        if (isFiltering) {
-            TaskFilter();
-        }
-    }, [isFiltering, openFilterModal]);
-
 
     const statesContent = {
         1: (className) => <img className={className} src={PendingIcon} alt="" />,
         2: (className) => <img className={className} src={ProgressIcon} alt="" />,
         3: (className) => <img className={className} src={CompleteIcon} alt="" />,
     };
+    
+    useEffect(() => {
+        if (!isFiltering) {
+            gTasks();
+        }
+    }, [openTaskModal, isFiltering, openViewTaskModal]);
+
+    useEffect(() => {
+        if (isFiltering) {
+            tFilter();
+            console.log(tasks);
+        }
+        // eslint-disable-next-line
+    }, [isFiltering, openFilterModal]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -135,8 +147,6 @@ export const Home = () => {
                                 content={'Todas'}
                                 onClick={() => { setIsFiltering(false) }} />
                         }
-
-
                     </div>
                     <div className="states-desc">
                         <p className="states">Pendiente: {statesContent[1]('desc-states-icon')}</p>
@@ -144,8 +154,6 @@ export const Home = () => {
                         <p className="states">Finalizada: {statesContent[3]('desc-states-icon')}</p>
                     </div>
                 </div>
-
-
                 <div className="table-content">
                     <table className="task-table">
                         <thead>
@@ -175,8 +183,18 @@ export const Home = () => {
                                             {item.estado.id !== 2 && (
                                                 <Link
                                                     className="actions"
-                                                    onClick={() => eliminarTarea(item.id)}
-                                                ><img className="actions-icon" src={DeleteIcon} alt="" /></Link>
+                                                    onClick={() => {
+                                                        dTask(item.id);
+                                                        setShowPopup(true);
+                                                        setIcon(Like);
+                                                        setViewContent('Tarea Eliminada');
+                                                    }}
+                                                >
+                                                    <img
+                                                        className="actions-icon"
+                                                        src={DeleteIcon}
+                                                        alt="" />
+                                                </Link>
                                             )}
                                             {item.estado.id === 1 || item.estado.id === 2 ? (
                                                 <><Link

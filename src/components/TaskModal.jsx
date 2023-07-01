@@ -5,9 +5,10 @@ import { Textarea } from "./form/Textarea";
 import { Combobox } from "./form/Combobox";
 import { Button } from "./form/Button";
 
-import EditIcon from '../resources/edit-icon.png'
-import AddIcon from '../resources/Add.png'
-import Like from '../resources/like.png'
+import EditIcon from '../resources/edit-icon.png';
+import AddIcon from '../resources/Add.png';
+import Like from '../resources/like.png';
+import CancelIcon from '../resources/cancel.png';
 
 import {
     readColaboratos,
@@ -20,7 +21,7 @@ import {
 export const TaskModal = ({
     openTaskModal,
     setOpenTaskModal,
-    task, 
+    task,
     isEditing,
     setIsEditing,
     setShowPopup,
@@ -35,6 +36,7 @@ export const TaskModal = ({
     const dateNow = date.toISOString().split('T')[0];
     const [taskAttributes, setTaskAttributes] = useState([]);
 
+    //Limpiar los campos
     const cleanFields = {
         id: null,
         descripcion: '',
@@ -45,6 +47,8 @@ export const TaskModal = ({
         colaborador: 1,
         notas: ''
     }
+
+    //body que se manda a los requests del API
     const body = {
         descripcion: taskAttributes.descripcion,
         estado_id: taskAttributes.estado,
@@ -55,6 +59,7 @@ export const TaskModal = ({
         notas: taskAttributes.notas
     };
 
+    //llenar los campos si se está editando
     const data = {
         id: task?.id,
         descripcion: task?.descripcion || '',
@@ -72,8 +77,9 @@ export const TaskModal = ({
         setViewContent(res);
         setIcon(Like);
         setTaskAttributes(cleanFields);
-    }
+    };
 
+    //capturar los valores de los inputs, combobox 
     const handleChange = e => {
         const { name, value } = e.target;
         if (name === 'fecha_inicio' && !isEditing) {
@@ -96,7 +102,7 @@ export const TaskModal = ({
                 .then(res => {
                     handleEditAndCreate(res);
                 }).catch(error => {
-                    alert(error);
+                    alert(error.message);
                 })
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
@@ -109,7 +115,9 @@ export const TaskModal = ({
                 .then(res => {
                     handleEditAndCreate(res);
                 }).catch(error => {
-                    alert(error);
+                    setIcon(CancelIcon);
+                    setViewContent(error.message);
+                    setShowPopup(true);
                 })
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
@@ -124,7 +132,7 @@ export const TaskModal = ({
                 setStates(states);
             })
             .catch(error => {
-                alert(error);
+                alert(error.message);
             });
     }, []);
 
@@ -133,7 +141,7 @@ export const TaskModal = ({
         // eslint-disable-next-line
     }, [task]);
 
-
+//Cerrar el Modal con Escape
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
