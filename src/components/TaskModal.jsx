@@ -149,6 +149,7 @@ export const TaskModal = ({
             if (event.key === "Escape") {
                 setOpenTaskModal(false);
                 setIsEditing(false);
+                setTaskAttributes(cleanFields);
             }
         };
         document.addEventListener("keydown", handleKeyDown);
